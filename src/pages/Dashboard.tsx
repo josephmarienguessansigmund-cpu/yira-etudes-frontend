@@ -36,11 +36,7 @@ export default function Dashboard() {
       <nav className="db-nav">
         <span className="db-logo">
           {/* On utilise la variable logoYira ici */}
-          <img 
-            src={logoYira} 
-            alt="Yira Études by Nohama" 
-            style={{ height: '35px', width: 'auto', display: 'block' }} 
-          />
+        <img src={logoYira} alt="YIRA Etudes" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
         </span>
         <div className="db-nav-right">
           <span className="db-cabinet">{cabinet.nom ?? 'Cabinet'}</span>
