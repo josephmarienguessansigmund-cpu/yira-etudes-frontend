@@ -5,13 +5,15 @@ import type { DashboardHome } from '../types/survey';
 import { Plus, LogOut, BarChart2, Users, TrendingUp, Clock } from 'lucide-react';
 import './Dashboard.css';
 
+// IMPORTS CRITIQUES (Disent à Vercel d'inclure les images)
+import logoYira from '../assets/logo-yira-etudes.png';
+import iconPsychometry from '../assets/icon-psychometry.png';
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [data, setData] = useState<DashboardHome | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  // Récupération des infos du cabinet (Nohama Consulting)
   const cabinet = JSON.parse(localStorage.getItem('yira_cabinet') ?? '{}');
 
   useEffect(() => {
@@ -33,9 +35,9 @@ export default function Dashboard() {
     <div style={{ minHeight: '100vh', background: '#f5f4f0', fontFamily: 'DM Sans, sans-serif' }}>
       <nav className="db-nav">
         <span className="db-logo">
-          {/* Version standard IMG pour compatibilité maximale */}
+          {/* On utilise la variable logoYira ici */}
           <img 
-            src="/assets/logo-yira-etudes.png" 
+            src={logoYira} 
             alt="Yira Études by Nohama" 
             style={{ height: '35px', width: 'auto', display: 'block' }} 
           />
@@ -43,9 +45,9 @@ export default function Dashboard() {
         <div className="db-nav-right">
           <span className="db-cabinet">{cabinet.nom ?? 'Cabinet'}</span>
           <button className="db-btn-new" onClick={() => navigate('/surveys/new')}>
-            <Plus size={15} /> Nouvelle enquete
+            <Plus size={15} /> Nouvelle enquête
           </button>
-          <button className="db-btn-logout" onClick={logout} title="Deconnexion">
+          <button className="db-btn-logout" onClick={logout} title="Déconnexion">
             <LogOut size={15} />
           </button>
         </div>
@@ -53,9 +55,9 @@ export default function Dashboard() {
 
       <main className="db-main">
         <p className="db-eyebrow">Tableau de bord</p>
-        <h1 className="db-heading">Vue ensemble</h1>
+        <h1 className="db-heading">Vue d'ensemble</h1>
 
-        {loading && <div className="db-loading">Chargement des données...</div>}
+        {loading && <div className="db-loading">Chargement...</div>}
         {error && <div className="db-error">{error}</div>}
 
         {data && (
@@ -63,54 +65,47 @@ export default function Dashboard() {
             <div className="db-kpi-grid">
               <div className="db-kpi">
                 <div className="db-kpi-icon" style={{ background: '#E6F1FB' }}>
-                  <BarChart2 size={16} color="#185FA5" />
+                  {/* Icône personnalisée de psychométrie */}
+                  <img src={iconPsychometry} alt="" style={{ width: '18px' }} />
                 </div>
-                <p className="db-kpi-label">Enquetes actives</p>
+                <p className="db-kpi-label">Enquêtes actives</p>
                 <p className="db-kpi-value">{data.kpis.total_enquetes}</p>
               </div>
               <div className="db-kpi">
                 <div className="db-kpi-icon" style={{ background: '#EAF3DE' }}>
                   <Users size={16} color="#3B6D11" />
                 </div>
-                <p className="db-kpi-label">Total reponses</p>
+                <p className="db-kpi-label">Total réponses</p>
                 <p className="db-kpi-value">{data.kpis.total_reponses.toLocaleString()}</p>
               </div>
               <div className="db-kpi">
                 <div className="db-kpi-icon" style={{ background: '#FAEEDA' }}>
                   <TrendingUp size={16} color="#854F0B" />
                 </div>
-                <p className="db-kpi-label">Reponses 7 jours</p>
+                <p className="db-kpi-label">Réponses 7j</p>
                 <p className="db-kpi-value">{data.kpis.reponses_7j}</p>
               </div>
               <div className="db-kpi">
                 <div className="db-kpi-icon" style={{ background: '#F1EFE8' }}>
                   <Clock size={16} color="#5F5E5A" />
                 </div>
-                <p className="db-kpi-label">Reponses 30 jours</p>
+                <p className="db-kpi-label">Réponses 30j</p>
                 <p className="db-kpi-value">{data.kpis.reponses_30j}</p>
               </div>
             </div>
 
             <div className="db-row">
               <div className="db-card">
-                <p className="db-card-title">Activite recente</p>
-                {data.feed_recent.length === 0 && (
-                  <p style={{ fontSize: 13, color: '#bbb', fontStyle: 'italic' }}>
-                    Aucune reponse recue.
-                  </p>
-                )}
+                <p className="db-card-title">Activité récente</p>
                 {data.feed_recent.map((item) => (
                   <div key={item.id} className="feed-item">
-                    <span className={'feed-canal canal-' + item.canal}>
-                      {item.canal.toUpperCase()}
-                    </span>
+                    <span className={'feed-canal canal-' + item.canal}>{item.canal.toUpperCase()}</span>
                     <span className="feed-titre">{item.enquete.titre}</span>
                   </div>
                 ))}
               </div>
-              
               <div className="db-card">
-                <p className="db-card-title">Top enquetes</p>
+                <p className="db-card-title">Top enquêtes</p>
                 {data.top_enquetes.map((e, i) => (
                   <div key={e.id} className="top-item">
                     <div className="top-dot" style={{ background: colors[i % colors.length] }} />
