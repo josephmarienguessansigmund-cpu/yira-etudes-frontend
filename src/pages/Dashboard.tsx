@@ -10,6 +10,8 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardHome | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // Récupération des infos du cabinet (Nohama Consulting)
   const cabinet = JSON.parse(localStorage.getItem('yira_cabinet') ?? '{}');
 
   useEffect(() => {
@@ -30,7 +32,14 @@ export default function Dashboard() {
   return (
     <div style={{ minHeight: '100vh', background: '#f5f4f0', fontFamily: 'DM Sans, sans-serif' }}>
       <nav className="db-nav">
-        <span className="db-logo">YIRA Etudes</span>
+        <span className="db-logo">
+          {/* Version standard IMG pour compatibilité maximale */}
+          <img 
+            src="/assets/logo-yira-etudes.png" 
+            alt="Yira Études by Nohama" 
+            style={{ height: '35px', width: 'auto', display: 'block' }} 
+          />
+        </span>
         <div className="db-nav-right">
           <span className="db-cabinet">{cabinet.nom ?? 'Cabinet'}</span>
           <button className="db-btn-new" onClick={() => navigate('/surveys/new')}>
@@ -46,7 +55,7 @@ export default function Dashboard() {
         <p className="db-eyebrow">Tableau de bord</p>
         <h1 className="db-heading">Vue ensemble</h1>
 
-        {loading && <div className="db-loading">Chargement des donnees...</div>}
+        {loading && <div className="db-loading">Chargement des données...</div>}
         {error && <div className="db-error">{error}</div>}
 
         {data && (
@@ -96,46 +105,19 @@ export default function Dashboard() {
                       {item.canal.toUpperCase()}
                     </span>
                     <span className="feed-titre">{item.enquete.titre}</span>
-                    <span className="feed-time">
-                      {new Date(item.created_at).toLocaleTimeString('fr-FR', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
                   </div>
                 ))}
               </div>
-
+              
               <div className="db-card">
                 <p className="db-card-title">Top enquetes</p>
-                {data.top_enquetes.length === 0 && (
-                  <p style={{ fontSize: 13, color: '#bbb', fontStyle: 'italic' }}>
-                    Aucune enquete.
-                  </p>
-                )}
                 {data.top_enquetes.map((e, i) => (
                   <div key={e.id} className="top-item">
-                    <div className="top-dot" style={{ background: colors[i] }} />
+                    <div className="top-dot" style={{ background: colors[i % colors.length] }} />
                     <span className="top-titre">{e.titre}</span>
                     <span className="top-count">{e.total_reponses}</span>
                   </div>
                 ))}
-                <button
-                  onClick={() => navigate('/surveys/new')}
-                  style={{
-                    marginTop: 16,
-                    width: '100%',
-                    background: 'none',
-                    border: '0.5px solid #e0ddd6',
-                    borderRadius: 8,
-                    padding: '8px 0',
-                    fontSize: 13,
-                    color: '#666',
-                    cursor: 'pointer',
-                  }}
-                >
-                  + Nouvelle enquete
-                </button>
               </div>
             </div>
           </div>
